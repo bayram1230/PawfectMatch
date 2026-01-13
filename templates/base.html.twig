@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}PawfectMatch{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {{ importmap('app') }}
+
+    {% block stylesheets %}{% endblock %}
+</head>
+
+<body class="body-pic d-flex flex-column min-vh-100">
+
+{# =========================
+   NAVBAR (zentral, 1 Datei)
+   ========================= #}
+<nav class="navbar navbar-expand-lg custom-navbar sticky-top">
+    <div class="container-fluid">
+
+        {# LOGO #}
+        <a class="navbar-brand" href="{{ path('home') }}">
+            <img src="{{ asset('img/navbar-logo.png') }}" alt="logo" class="navbar-logo">
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            {# CENTER LINKS #}
+            <ul class="navbar-nav mx-auto navbar-links">
+
+                {# HOME – alle #}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('home') }}">Home</a>
+                </li>
+
+                {# PETS – guest, user, admin (nicht shelter) #}
+                {% if not is_granted('ROLE_SHELTER') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            Pets
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark">
+                            <li>
+                            {# <li><a class="dropdown-item" href="{{ path('pet_list') }}">Search Pets</a></li> #}
+                            <li><a class="dropdown-item" href="{{ path('pets_fostered') }}">Fostered Pets</a></li>
+                            <li><a class="dropdown-item" href="{{ path('pets_adopted') }}">Adopted Pets</a></li>
+                            <li><a class="dropdown-item" href="{{ path('pets_pet_of_week') }}">Pet of the Week</a></li>
+                            <li><a class="dropdown-item" href="{{ path('pets_matchmaker') }}">Matchmaker</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+
+                {# INFO – alle #}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                        Info
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark">
+                        <li><a class="dropdown-item" href="#">Resource Library</a></li>
+                        <li><a class="dropdown-item" href="#">Adoption Stories</a></li>
+                        <li><a class="dropdown-item" href="#">Volunteer Opportunities</a></li>
+
+                        {# USER + ADMIN #}
+                        {% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
+                            <li><a class="dropdown-item" href="#">My Applications</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+
+                {# ADMIN ENTRY #}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('admin_adoption_request_list') }}">Admin</a>
+                    </li>
+                {% endif %}
+
+                {# CONTACT – alle #}
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact us</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Chat</a>
+                </li>
+            </ul>
+
+            {# PROFILE / AUTH #}
+            <ul class="navbar-nav ms-auto navbar-profile">
+                <li class="nav-item dropdown profile-dropdown">
+
+                    <img
+                        src="{{ asset('img/default-users.png') }}"
+                        class="rounded-circle"
+                        alt="Profile picture"
+                    >
+
+                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"></a>
+
+                    <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                        {% if not app.user %}
+                            <li><a class="dropdown-item" href="{{ path('app_login') }}">Login</a></li>
+                            <li><a class="dropdown-item" href="#">Sign Up</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a></li>
+                        {% endif %}
+                    </ul>
+
+                </li>
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+{# =========================
+   MAIN CONTENT
+   ========================= #}
+<main class="flex-fill">
+    {% block body %}{% endblock %}

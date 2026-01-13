@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ pet.name }} – Details
+{% endblock %}
+
+{% block body %}
+<div class="container details-container my-5">
+
+    <a href="{{ path('home') }}" class="details-back-button mb-4 d-inline-block">
+        ← Back to Search
+    </a>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <div class="card paw-card paw-card--details">
+                <div class="paw-card-inner">
+                    <div class="details-content">
+
+                        {# LEFT #}
+                        <div class="details-left">
+                            <h2 class="details-name">
+                                {{ pet.name }}
+                            </h2>
+
+                            {% set imgSrc = pet.image starts with 'http'
+                                ? pet.image
+                                : asset('img/' ~ pet.image)
+                            %}
+
+                            <img
+                                src="{{ imgSrc }}"
+                                class="details-card-img"
+                                alt="{{ pet.name }}"
+                                onerror="this.src='{{ asset('img/default-animals.png') }}'"
+                            >
+
+                            <a href="#"
+                               class="details-inline-btn mt-3">
+                                🐾 Take Me Home 🐾
+                            </a>
+                        </div>
+
+                        {# RIGHT #}
+                        <div class="details-right">
+                        <h5 class="text-center">Description</h5>
+                             <div class="details-description-wrapper">
+                            <p>{{ pet.description|nl2br }}</p>
+                            </div>
+                              <h5 class="mt-4 text-center">Adoption Requirements</h5>
+                            <div class="details-adoption-wrapper">
+                            {% if pet.adoptionRequirements %}
+    <p>{{ pet.adoptionRequirements|nl2br }}</p>
+{% endif %}
+</div>
+
+                            <h5 class="mt-4 text-center">Characteristics</h5>
+
+                            <table class="details-table">
+                                <tr><th>Type:</th><td>{{ pet.species }}</td></tr>
+                                <tr><th>Breed:</th><td>{{ pet.breed ?? '—' }}</td></tr>
+                                <tr><th>Sex:</th><td>{{ pet.sex ?? '—' }}</td></tr>
+                                <tr><th>Age:</th><td>{{ pet.age ?? '—' }}</td></tr>
+                                <tr><th>Color:</th><td>{{ pet.color ?? '—' }}</td></tr>
+                                <tr><th>Size:</th><td>{{ pet.size ?? '—' }}</td></tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

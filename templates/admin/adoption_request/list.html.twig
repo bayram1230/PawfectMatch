@@ -1,0 +1,40 @@
+<h1>Adoption Requests</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Pet</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for request in requests %}
+            <tr>
+                <td>{{ request.pet.name }}</td>
+                <td>{{ request.fullName }}</td>
+                <td>{{ request.email }}</td>
+                <td>{{ request.currentStatus }}</td>
+                <td>
+                    {% if request.currentStatus == 'Pending' %}
+                        <form method="post"
+                              action="{{ path('admin_adoption_request_approve', { id: request.id }) }}"
+                              style="display:inline;">
+                            <button type="submit">Approve</button>
+                        </form>
+
+                        <form method="post"
+                              action="{{ path('admin_adoption_request_reject', { id: request.id }) }}"
+                              style="display:inline;">
+                            <button type="submit">Reject</button>
+                        </form>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pet Matchmaker{% endblock %}
+
+{% block body %}
+<div class="container index-container mt-5">
+
+    <h2 class="paw-card-h1 text-white text-center mb-3">
+        🏹 Pet Matchmaker Quiz
+    </h2>
+
+    <p class="lead text-white text-center mb-4">
+        Answer a few quick questions to find your perfect pet match!
+    </p>
+
+    {# Matchmaker form #}
+    <form method="post" class="mt-4">
+
+        <div class="mb-3">
+            <label class="form-label text-white">Your lifestyle:</label>
+            <select name="activity" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="active">Active</option>
+                <option value="calm">Calm</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-white">Your home type:</label>
+            <select name="home" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="house">House</option>
+                <option value="apartment">Apartment</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-white">Pet ownership experience:</label>
+            <select name="experience" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="first">First-time owner</option>
+                <option value="experienced">Experienced owner</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-white">Preferred pet type:</label>
+            <select name="petType" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="Dog">Dog</option>
+                <option value="Cat">Cat</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label text-white">Age preference:</label>
+            <select name="agePref" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="young">Young</option>
+                <option value="adult">Adult</option>
+                <option value="senior">Senior</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn paw-card-btn">
+            Find My Match
+        </button>
+    </form>
+
+    {# Info / validation message #}
+    {% if message %}
+        <div class="alert alert-info mt-4">
+            {{ message }}
+        </div>
+    {% endif %}
+
+    {# Match result #}
+{% if result %}
+    {% set pet = result.pet %}
+
+    <div class="card paw-card paw-card--index mt-4 text-center">
+        <div class="card-body">
+
+            <h4 class="paw-card-title mb-3">
+                {{ pet.name }}
+            </h4>
+
+            <img
+                src="{{ pet.image }}"
+                alt="{{ pet.name }}"
+                class="img-fluid rounded mb-3"
+            >
+
+            <p class="text-white">
+                {{ pet.description ?: 'No description available.' }}<br>
+                <strong>Type:</strong> {{ pet.species }}<br>
+                <strong>Age:</strong> {{ pet.age ?? 'Unknown' }}
+            </p>
+
+            <hr class="index-card-hr">
+
+            <h6 class="text-white mt-3">
+                Why this pet is a good match:
+            </h6>
+
+            <ul class="text-white text-start mt-2">
+                {% for reason in result.reasons %}
+                    <li>{{ reason }}</li>
+                {% endfor %}
+            </ul>
+
+            <p class="text-white mt-2">
+                <strong>Match score:</strong> {{ result.score }}
+            </p>
+
+            <a href="{{ path('pets_detail', { id: pet.id }) }}"
+               class="btn paw-card-btn mt-3">
+                Learn More
+            </a>
+
+        </div>
+    </div>
+{% endif %}
+
+
+</div>
+{% endblock %}

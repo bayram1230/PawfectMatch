@@ -1,0 +1,466 @@
+PawfectMatch – Project Status & Architecture Overview
+📌 Project Overview
+
+PawfectMatch is a Symfony-based web application for pet adoption management.
+The project focuses on clean architecture, maintainability, and deterministic, test-driven business logic, following industry best practices.
+
+The current state represents a stable, production-oriented baseline on which new features can be added incrementally without architectural debt.
+
+🏗️ Architecture Overview
+
+The application follows a layered architecture with clear responsibilities:
+
+Controller (HTTP Layer)
+↓
+Application Services (Use Cases)
+↓
+Domain Logic (Business Rules)
+↓
+Persistence (Doctrine Repositories)
+
+Key Principles
+
+Strict separation of concerns
+
+No business logic in controllers or templates
+
+Deterministic, fully testable domain logic
+
+Framework-agnostic core logic where possible
+
+Explicit modeling of business rules and state transitions
+
+Read and write responsibilities are clearly separated
+
+🧩 Core Components
+Controllers
+
+Handle HTTP requests and routing
+
+Delegate all logic to application services
+
+Never contain SQL or business rules
+
+Example: PetController
+
+Application Services
+
+Orchestrate use cases
+
+Coordinate repositories and domain services
+
+Represent what the application can do
+
+Contain no business rules themselves
+
+Examples:
+
+PetCatalog
+
+AdoptionManager
+
+Domain Layer
+
+Contains core business logic, explicitly modeled and fully unit-tested.
+
+Characteristics:
+
+Independent of Symfony, Doctrine, or Twig
+
+Deterministic and side-effect free
+
+Explicit state transitions
+
+Illegal states are prevented by design
+
+🧠 Domain Modeling Highlights
+Matchmaking Domain
+
+Matchmaker – deterministic, scoring-based matching engine with structured, explainable decision logic
+
+MatchResult – immutable domain object containing the selected pet, total score, and structured match reasons
+
+MatchReason – value object representing a single matching reason (code + weight), forming the single source of truth for scoring and explainability
+
+Adoption Domain (Explicit Lifecycle Modeling)
+
+The adoption process is modeled as an explicit domain lifecycle, not as implicit state changes scattered across entities.
+
+AdoptionRequest (Domain)
+
+Starts in a defined PENDING state
+
+Explicit lifecycle:
+
+PENDING → APPROVED → COMPLETED
+
+Explicitly supports approve(), reject(), and complete() transitions
+
+Illegal transitions throw domain exceptions
+
+Rejection reasons are first-class domain concepts
+
+Existing requests can be safely rehydrated into the domain model for validation
+
+Key Business Rule
+
+When one adoption request for a pet is approved, all other pending requests for the same pet are automatically rejected, with a clear and user-facing rejection reason
+(e.g. “This pet has already found a new home”).
+
+Pet Lifecycle (New)
+
+Pets now have an explicit lifecycle modeled via a dedicated status:
+
+ACTIVE – visible, adoptable, matchable
+
+ARCHIVED – adopted and no longer publicly visible
+
+Key characteristics:
+
+Pets are automatically archived as a direct consequence of an adoption being completed
+
+Archiving is modeled as an explicit domain action (Pet::archive()), not as an implicit side effect
+
+Archived pets remain fully accessible for historical views and reporting
+
+AdoptionManager (Application Service)
+
+Orchestrates the adoption workflow
+
+Maps persistence entities to domain objects
+
+Delegates all decision-making to the domain
+
+Persists adoption decisions as immutable history entries
+
+Completes adoptions and archives pets as a deterministic consequence
+
+Fully testable without database or framework dependencies
+
+This approach ensures that adoption behavior is predictable, enforceable, and explainable, even as the system grows.
+
+🗄️ Persistence Layer
+
+Doctrine repositories encapsulate all database access
+
+Queries are expressive and use-case driven
+
+No business decisions inside repositories
+
+Read models are explicitly hardened (e.g. filtering ACTIVE pets only)
+
+Example: PetRepository
+
+Archived pets are globally excluded from:
+
+Homepage listings
+
+Public pet listings
+
+Matchmaker candidate selection
+
+without requiring controller or UI-level filtering.
+
+🎨 Presentation Layer
+
+Twig templates for rendering UI
+
+No SQL, no domain logic
+
+Clean and readable views
+
+Read-side behavior reflects repository-level constraints
+
+🧪 Testing
+
+PHPUnit via symfony/phpunit-bridge
+
+Real unit tests (no kernel, no database)
+
+Domain logic tested in full isolation
+
+Application services tested via integration-style tests with in-memory infrastructure
+
+Focus on:
+
+Edge cases
+
+Illegal state transitions
+
+Conflicting rules
+
+Deterministic and explainable outcomes
+
+Both domain and application layers are test-locked, ensuring change safety.
+
+🚀 Why This Matters (Recruiter Perspective)
+
+This project demonstrates:
+
+Clean separation of responsibilities
+
+Practical Symfony usage (not tutorial-style CRUD)
+
+Deterministic, test-driven business logic
+
+Explicit domain and lifecycle modeling
+
+Conscious handling of read/write separation
+
+Awareness of long-term maintainability and architectural stability
+
+Positioning:
+Entry-level / backend-oriented Symfony developer project demonstrating production-oriented architecture, domain-driven decision logic, and test-first design.
+
+🔜 Next Planned Steps
+
+Planned features built on top of the current stable baseline:
+
+Shelter, applicant, and admin dashboards (read models)
+
+Admin pet management with business constraints
+
+Domain events (e.g. PetAdoptedEvent)
+
+Notifications and activity logging
+
+CQRS-style read models for complex listings
+
+Additional unit and application-level tests
+
+✅ Current Status
+
+Schema stable
+
+Migrations in sync
+
+Architecture established
+
+Adoption and pet lifecycles explicitly modeled
+
+Domain and application logic locked by tests
+
+Read models hardened against archived state leakage
+
+Ready for controlled feature expansion.
+-----------------------------------------------------------------------------------------------------------------
+
+🔍 PRÜFUNG: WAS FEHLT / WAS IST VERALTET?
+Neu hinzugekommen (muss rein)
+
+✅ Pet Lifecycle (ACTIVE → ARCHIVED)
+
+✅ Automatische Archivierung bei Adoption COMPLETED
+
+✅ Read-Model-Härtung über Repository (ACTIVE-Filter)
+
+✅ Adoption Completion als expliziter Schritt
+
+✅ Application-Service-Test für Adoption + Archivierung
+
+✅ Schema-Validierung erfolgreich (grün)
+
+Was leicht angepasst werden sollte
+
+Adoption Lifecycle ist erweitert (nicht nur approve/reject)
+
+„Tests laufen“ → jetzt test-locked inkl. Completion
+
+Nächste Schritte: Shelter Dashboard ist konkreter als vorher
+
+✅ AKTUALISIERTE CHECKLISTE (FINAL)
+
+Du kannst das direkt ersetzen.
+
+🧭 WO DU JETZT STEHST (AKTUELL)
+
+✔️ Architektur steht
+✔️ Domain-Logik explizit und testgetrieben modelliert
+✔️ Matchmaker stabil, deterministisch und test-locked
+✔️ Adoption Lifecycle vollständig modelliert (PENDING → APPROVED → COMPLETED)
+✔️ Pet Lifecycle explizit modelliert (ACTIVE → ARCHIVED)
+✔️ Illegale Zustände werden verhindert (Domain Exceptions)
+✔️ Automatische Ablehnung konkurrierender Adoption Requests umgesetzt
+✔️ Automatische Archivierung von Pets bei abgeschlossener Adoption
+✔️ Read-Model-Härtung: archivierte Pets sind global ausgeschlossen
+✔️ Migration inkrementell, geprüft und validiert
+✔️ Doctrine Mapping & Schema vollständig synchron
+✔️ Tests laufen (Domain + Application Services, ohne Kernel / DB)
+
+➡️ Du baust nichts mehr „zufällig“.
+➡️ Jede neue Funktion muss sich in die Architektur einfügen oder wird bewusst abgelehnt.
+
+✅ WAS BEREITS ERLEDIGT IST (Roadmap-Check)
+1️⃣ Matchmaker absichern → ERLEDIGT
+
+Umgesetzt:
+
+Edge-Case Tests:
+
+keine Kriterien
+
+widersprüchliche Kriterien
+
+mehrere gleich gute Matches
+
+Score-Grenzen
+
+Vollständige, erklärbare Match-Reasons
+
+Deterministische Entscheidungslogik
+
+Klare Trennung zwischen Scoring & Präsentation
+
+👉 Recruiter-Signal:
+„Der Kandidat denkt in Stabilität und Vorhersagbarkeit.“
+
+2️⃣ Adoption & Pet Lifecycle sauber modellieren → ERLEDIGT
+
+Umgesetzt:
+
+Expliziter Domain Lifecycle (AdoptionRequest)
+
+PENDING → APPROVED → COMPLETED
+
+Illegale Status-Transitions verhindert (Domain Exceptions)
+
+Automatische Ablehnung konkurrierender Requests
+
+Rejection Reason als Domain-Konzept
+
+AdoptionManager als orchestrierender Application Service
+
+Persistenz über AdoptionHistory
+
+Pet Lifecycle mit Status (ACTIVE / ARCHIVED)
+
+Archivierung als fachliche Konsequenz der Adoption Completion
+
+Repository-basierte Read-Filterung (ACTIVE only)
+
+Migration inkrementell & validiert
+
+Schema & Mapping vollständig synchron
+
+Application-Service-Tests für Adoption + Archivierung
+
+👉 Das ist echter Business-Code, kein CRUD.
+
+🔝 NÄCHSTE LOGISCHE SCHRITTE (NEUER STAND)
+3️⃣ User-Dashboards (Read Models) → JETZT sinnvoll
+
+Jetzt wird die Architektur sichtbar wirksam.
+
+Applicant Dashboard
+
+eigene Anfragen
+
+aktueller Status
+
+Entscheidungs-Historie
+
+Shelter Dashboard
+
+eigene Pets (nur ACTIVE)
+
+archivierte automatisch ausgeblendet
+
+eingehende Anfragen
+
+Entscheidungsübersicht
+
+Admin Dashboard
+
+systemweite Übersicht
+
+Status & Entscheidungen
+
+Archiv (read-only)
+
+➡️ Empfehlung:
+
+getrennte Query-Methoden
+
+DTOs für Views
+
+kein Reuse von Domain-Objekten
+
+👉 Recruiter-Signal:
+„Der Kandidat versteht Read / Write Trennung.“
+
+4️⃣ Admin CRUD für Pets (aber richtig)
+
+Nicht:
+
+make:crud blind ausführen
+
+Sondern:
+
+Validierung
+
+Image-Upload-Strategie
+
+Business-Regeln:
+
+Pet nicht löschbar bei vorhandenen AdoptionRequests
+
+status-abhängige Aktionen (ACTIVE vs ARCHIVED)
+
+👉 Produktionsdenken, kein Tutorial.
+
+5️⃣ Domain Events & Messaging (optional, aber stark)
+
+Jetzt architektonisch sinnvoll – nicht vorher.
+
+Beispiele:
+
+PetAdoptedEvent
+
+AdoptionRejectedEvent
+
+Später nutzbar für:
+
+Notifications
+
+E-Mails
+
+Activity Logs
+
+➡️ Lose Kopplung
+➡️ Erweiterbar ohne Refactor
+
+👉 Hebt klar von Junior-Projekten ab.
+
+6️⃣ API-Readiness (Bonus)
+
+Nicht implementieren, aber vorbereiten:
+
+Controller logisch von Views trennbar
+
+DTOs statt Entities im Output
+
+JSON-Responses jederzeit möglich
+
+👉 Interview-Satz:
+„Die App ist API-ready, auch wenn aktuell Twig genutzt wird.“
+
+🧠 WAS DU JETZT NICHT MACHEN SOLLTEST
+
+❌ neues Framework einbauen
+❌ Frontend komplett umbauen
+❌ Refactoring ohne fachlichen Grund
+❌ Performance-Tuning ohne Messung
+
+➡️ Deine Basis ist stabil, nicht experimentell.
+
+🎯 EMPFOHLENE KONKRETE REIHENFOLGE (AKTUALISIERT)
+
+Shelter Dashboard (Read Model)
+
+Applicant Dashboard
+
+Admin Pet CRUD
+
+Domain Events / Notifications
+
+API-Readiness / DTOs

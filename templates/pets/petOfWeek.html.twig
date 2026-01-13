@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pet of the Week{% endblock %}
+
+{% block body %}
+<div class="container index-container mt-5">
+
+    <h2 class="paw-card-h1 text-white text-center mb-3">
+        🐾 Pet of the Week
+    </h2>
+
+    <p class="lead text-white text-center mb-4">
+        Each week we highlight one special pet looking for a forever home.
+    </p>
+
+    {% if pet %}
+        <div class="card paw-card paw-card--index shadow text-center">
+            <div class="card-body">
+
+                <h3 class="paw-card-h1 mb-3">
+                    {{ pet.name }}
+                </h3>
+
+                <img
+                    src="{{ pet.image }}"
+                    alt="{{ pet.name }}"
+                    class="img-fluid mx-auto d-block rounded mb-3 paw-card-img"
+                >
+
+                <p class="text-white">
+                    {{ pet.description ?: 'No description available.' }}<br>
+                    <strong>Type:</strong> {{ pet.species }}<br>
+                    <strong>Age:</strong> {{ pet.age ?? 'Unknown' }}
+                </p>
+
+                <a href="{{ path('pets_detail', { id: pet.id }) }}"
+                   class="btn paw-card-btn">
+                    Learn More
+                </a>
+
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center">
+            No Pet of the Week available right now.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

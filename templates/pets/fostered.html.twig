@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Fostered Pets{% endblock %}
+
+{% block body %}
+<div class="container index-container mt-5">
+
+    <h2 class="paw-card-h1 text-white text-center mb-3">
+        🐕 Fostered Pets
+    </h2>
+
+    <p class="lead text-white text-center mb-4" style="opacity: 0.9;">
+        These pets are currently in foster care, waiting for their forever homes.
+    </p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+        {% if pets is not empty %}
+            {% for pet in pets %}
+                <div class="col">
+                    <div class="card paw-card paw-card--index h-100">
+                        <div class="paw-card-inner">
+                            <div class="paw-card-content">
+
+                                <img
+                                    src="{{ pet.image }}"
+                                    class="paw-card-img"
+                                    alt="{{ pet.name }}"
+                                >
+
+                                <div class="paw-card-title-wrapper">
+                                    <h5 class="paw-card-title">
+                                        {{ pet.name }}
+                                    </h5>
+
+                                    <hr class="index-card-hr">
+
+                                    <p class="paw-card-meta">
+                                        {{ pet.description ?: 'No description available.' }}
+                                    </p>
+                                </div>
+
+                                <a
+                                    href="{{ path('pets_detail', { id: pet.id }) }}"
+                                    class="btn paw-card-btn"
+                                >
+                                    View Details
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col">
+                <div class="alert alert-info text-center">
+                    No pets are currently fostered.
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

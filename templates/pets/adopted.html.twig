@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adopted Pets{% endblock %}
+
+{% block body %}
+<div class="container index-container mt-5">
+
+    <h2 class="paw-card-h1 text-white text-center mb-3">
+        🏡 Adopted Pets
+    </h2>
+
+    <p class="lead text-white text-center mb-4" style="opacity: 0.9;">
+        These pets have already been adopted and are enjoying their new homes.
+    </p>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+        {% if pets is not empty %}
+            {% for pet in pets %}
+                <div class="col">
+                    <div class="card paw-card paw-card--index h-100">
+                        <div class="paw-card-inner">
+                            <div class="paw-card-content">
+
+                                <img
+                                    src="{{ pet.image }}"
+                                    class="paw-card-img"
+                                    alt="{{ pet.name }}"
+                                >
+
+                                <div class="paw-card-title-wrapper">
+                                    <h5 class="paw-card-title">
+                                        {{ pet.name }}
+                                    </h5>
+
+                                    <hr class="index-card-hr">
+
+                                    <p class="paw-card-meta">
+                                        {{ pet.description ?: 'No description available.' }}
+                                    </p>
+                                </div>
+
+                                {# Status badge instead of action button #}
+                                <span class="badge bg-secondary mt-2">
+                                    Adopted
+                                </span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col">
+                <div class="alert alert-info text-center">
+                    No pets have been adopted yet.
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}
