@@ -1,0 +1,46 @@
+<div class="col">
+    <div class="card paw-card paw-card--admin">
+
+        <img
+            src="{{ pet.image }}"
+            class="paw-card-img"
+            alt="{{ pet.name }}"
+        >
+
+        <div class="paw-card-title-wrapper">
+            <h5 class="paw-card-title">{{ pet.name }}</h5>
+        </div>
+
+        {% if can_manage_pets %}
+            <div class="d-flex justify-content-center gap-2 mt-3">
+
+                {% if edit_pet_route is defined %}
+                    <a
+                        href="{{ path(edit_pet_route, { id: pet.id }) }}"
+                        class="btn update-btn px-3"
+                    >
+                        UPDATE
+                    </a>
+                {% endif %}
+
+                {% if delete_pet_route is defined %}
+                    <form
+                        action="{{ path(delete_pet_route, { id: pet.id }) }}"
+                        method="post"
+                        onsubmit="return confirm('Delete this pet?');"
+                    >
+                        <input
+                            type="hidden"
+                            name="_token"
+                            value="{{ csrf_token('delete_pet_' ~ pet.id) }}"
+                        >
+                        <button type="submit" class="btn delete-btn px-3">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+        {% endif %}
+    </div>
+</div>

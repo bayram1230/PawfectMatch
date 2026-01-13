@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block body %}
+<div class="container index-container">
+
+    <h1 class="paw-card-h1">My Applications</h1>
+
+    {% if applications is empty %}
+        <p class="text-center mt-4">
+            You have not submitted any adoption requests yet.
+        </p>
+    {% else %}
+        <div class="row g-4 mt-4">
+            {% for application in applications %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card paw-card p-3">
+
+                        <h5 class="mb-2">
+                            {{ application.pet.name }}
+                        </h5>
+
+                        <p class="mb-1">
+                            Status:
+                            <strong>{{ application.latestStatus ?? 'Pending' }}</strong>
+                        </p>
+
+                        {% if application.latestRejectionReason %}
+                            <p class="text-danger small">
+                                {{ application.latestRejectionReason }}
+                            </p>
+                        {% endif %}
+
+                        <p class="text-muted small mb-0">
+                            Submitted on {{ application.createdAt|date('Y-m-d') }}
+                        </p>
+
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

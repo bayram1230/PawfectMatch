@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ dashboard_title }}{% endblock %}
+
+{% block body %}
+<div class="container index-container">
+
+    <!-- ACTION BAR -->
+    <div class="d-flex justify-content-end gap-2 mb-3">
+
+        {% if can_manage_pets %}
+            <a href="{{ path(create_pet_route) }}" class="btn add-new-pet-btn">
+                Add new pet 🐾
+            </a>
+        {% endif %}
+
+        <button
+            class="btn operations-btn"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#dashboardOffcanvas"
+        >
+            ☰ Operations
+        </button>
+    </div>
+
+    <h1 class="paw-card-h1">{{ dashboard_title }}</h1>
+
+    <!-- PET GRID -->
+    {% if pets is empty %}
+        <h3 class="text-center">No animals found</h3>
+    {% else %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for pet in pets %}
+                {% include 'pets/_card.html.twig' with {
+                    pet: pet,
+                    can_manage_pets: can_manage_pets,
+                    edit_pet_route: edit_pet_route,
+                    delete_pet_route: delete_pet_route
+                } %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

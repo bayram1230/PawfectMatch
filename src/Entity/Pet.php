@@ -4,10 +4,10 @@ namespace App\Entity;
 
 use App\Domain\Pets\PetStatus;
 use App\Repository\PetRepository;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PetRepository::class)]
 #[ORM\Table(name: 'pets')]
@@ -48,7 +48,14 @@ class Pet
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adoptionRequirements = null;
 
+    /**
+     * Shelter owning this pet
+     *
+     * Nullable for now because existing imported pets
+     * may not yet be assigned to a shelter.
+     */
     #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
     private ?User $shelter = null;
 
     #[ORM\Column(enumType: PetStatus::class)]

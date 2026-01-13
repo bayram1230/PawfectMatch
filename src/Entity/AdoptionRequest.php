@@ -20,6 +20,12 @@ class AdoptionRequest
     #[ORM\JoinColumn(nullable: false)]
     private ?Pet $pet = null;
 
+    /**
+     * The user who applied for the pet
+     */
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $applicant = null;
 
     #[ORM\Column(length: 255)]
     private ?string $fullName = null;
@@ -33,9 +39,6 @@ class AdoptionRequest
     #[ORM\Column]
     private \DateTimeImmutable $createdAt;
 
-    #[ORM\Column(length: 50)]
-    private ?string $username = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $surveyAnswer = null;
 
@@ -43,11 +46,11 @@ class AdoptionRequest
      * @var Collection<int, AdoptionHistory>
      */
     #[ORM\OneToMany(
-    targetEntity: AdoptionHistory::class,
-    mappedBy: 'adoptionRequest',
-    orphanRemoval: true
-)]
-#[ORM\OrderBy(['decidedAt' => 'ASC'])]
+        targetEntity: AdoptionHistory::class,
+        mappedBy: 'adoptionRequest',
+        orphanRemoval: true
+    )]
+    #[ORM\OrderBy(['decidedAt' => 'ASC'])]
     private Collection $adoptionHistories;
 
     public function __construct()
@@ -55,6 +58,10 @@ class AdoptionRequest
         $this->createdAt = new \DateTimeImmutable();
         $this->adoptionHistories = new ArrayCollection();
     }
+
+    // -------------------------
+    // Identity & Relations
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -66,18 +73,33 @@ class AdoptionRequest
         return $this->pet;
     }
 
-    public function setPet(?Pet $pet): static
+    public function setPet(Pet $pet): self
     {
         $this->pet = $pet;
         return $this;
     }
+
+    public function getApplicant(): ?User
+    {
+        return $this->applicant;
+    }
+
+    public function setApplicant(User $applicant): self
+    {
+        $this->applicant = $applicant;
+        return $this;
+    }
+
+    // -------------------------
+    // Applicant-provided data
+    // -------------------------
 
     public function getFullName(): ?string
     {
         return $this->fullName;
     }
 
-    public function setFullName(string $fullName): static
+    public function setFullName(string $fullName): self
     {
         $this->fullName = $fullName;
         return $this;
@@ -88,7 +110,7 @@ class AdoptionRequest
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;
@@ -99,31 +121,9 @@ class AdoptionRequest
         return $this->message;
     }
 
-    public function setMessage(?string $message): static
+    public function setMessage(?string $message): self
     {
         $this->message = $message;
-        return $this;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-        return $this;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): static
-    {
-        $this->username = $username;
         return $this;
     }
 
@@ -132,11 +132,24 @@ class AdoptionRequest
         return $this->surveyAnswer;
     }
 
-    public function setSurveyAnswer(?string $surveyAnswer): static
+    public function setSurveyAnswer(?string $surveyAnswer): self
     {
         $this->surveyAnswer = $surveyAnswer;
         return $this;
     }
+
+    // -------------------------
+    // Timestamps
+    // -------------------------
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    // -------------------------
+    // Adoption History
+    // -------------------------
 
     /**
      * @return Collection<int, AdoptionHistory>
@@ -146,7 +159,7 @@ class AdoptionRequest
         return $this->adoptionHistories;
     }
 
-    public function addAdoptionHistory(AdoptionHistory $adoptionHistory): static
+    public function addAdoptionHistory(AdoptionHistory $adoptionHistory): self
     {
         if (!$this->adoptionHistories->contains($adoptionHistory)) {
             $this->adoptionHistories->add($adoptionHistory);
@@ -156,7 +169,7 @@ class AdoptionRequest
         return $this;
     }
 
-    public function removeAdoptionHistory(AdoptionHistory $adoptionHistory): static
+    public function removeAdoptionHistory(AdoptionHistory $adoptionHistory): self
     {
         if ($this->adoptionHistories->removeElement($adoptionHistory)) {
             if ($adoptionHistory->getAdoptionRequest() === $this) {
@@ -167,9 +180,12 @@ class AdoptionRequest
         return $this;
     }
 
+    // -------------------------
+    // Read-only helpers
+    // -------------------------
+
     /**
-     * Read-only Convenience-Methode:
-     * Liefert den aktuellen Status aus der letzten History.
+     * Returns the current status based on the latest history entry
      */
     public function getCurrentStatus(): ?string
     {
@@ -177,30 +193,27 @@ class AdoptionRequest
             return null;
         }
 
-        return $this->adoptionHistories
-            ->last()
-            ->getStatus();
+        return $this->adoptionHistories->last()->getStatus();
     }
 
     public function getLatestStatus(): ?string
-{
-    return $this->getCurrentStatus();
-}
-
-public function getLatestRejectionReason(): ?string
-{
-    $history = $this->getLatestHistory();
-
-    return $history?->getRejectionReason();
-}
-
-public function getLatestHistory(): ?AdoptionHistory
-{
-    if ($this->adoptionHistories->isEmpty()) {
-        return null;
+    {
+        return $this->getCurrentStatus();
     }
 
-    return $this->adoptionHistories->last();
-}
+    public function getLatestRejectionReason(): ?string
+    {
+        $history = $this->getLatestHistory();
 
+        return $history?->getRejectionReason();
+    }
+
+    public function getLatestHistory(): ?AdoptionHistory
+    {
+        if ($this->adoptionHistories->isEmpty()) {
+            return null;
+        }
+
+        return $this->adoptionHistories->last();
+    }
 }

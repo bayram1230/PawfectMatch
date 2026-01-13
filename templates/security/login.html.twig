@@ -1,28 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Login{% endblock %}
 
 {% block body %}
-<form method="post">
-    {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
+<body class="body-pic">
 
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+<div class="container my-5">
+
+    <!-- LOGO -->
+    <h1 class="text-center mb-4 fw-bold">
+        <img
+            src="{{ asset('img/logo.png') }}"
+            alt="Pawfect Match Logo"
+            style="max-width: 220px; height: auto;"
+        >
+    </h1>
+
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+
+            <div class="card register-card p-4">
+
+                {# Login error #}
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+
+                <form method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label">Email or Username *</label>
+                        <input
+                            type="text"
+                            name="identifier"
+                            class="form-control"
+                            value="{{ last_username }}"
+                            required
+                            autofocus
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Password *</label>
+                        <input
+                            type="password"
+                            name="password"
+                            class="form-control"
+                            required
+                        >
+                    </div>
+
+                    <input
+                        type="hidden"
+                        name="_csrf_token"
+                        value="{{ csrf_token('authenticate') }}"
+                    >
+
+                    <button type="submit" class="btn btn-dark w-100 register-btn">
+                        Login
+                    </button>
+
+                    <p class="text-center mt-3 mb-0">
+                        Don’t have an account?
+                        <a href="#">Register here</a>
+                    </p>
+
+                </form>
+
+            </div>
+
         </div>
-    {% endif %}
+    </div>
+</div>
 
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputUsername">Username</label>
-    <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="form-control" autocomplete="username" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+</body>
 {% endblock %}

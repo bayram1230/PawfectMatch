@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Pet;
+use App\Entity\User;
 use App\Domain\Pets\PetStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -10,7 +11,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<Pet>
  */
-class PetRepository extends ServiceEntityRepository
+final class PetRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -34,7 +35,7 @@ class PetRepository extends ServiceEntityRepository
     }
 
     /**
-     * All pets (default public listing)
+     * Public pet listing (ACTIVE only)
      *
      * @return Pet[]
      */
@@ -49,8 +50,44 @@ class PetRepository extends ServiceEntityRepository
     }
 
     /**
+     * Admin dashboard:
+     * All ACTIVE pets across all shelters
+     *
+     * @return Pet[]
+     */
+    public function findAllActive(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', PetStatus::ACTIVE)
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Shelter dashboard:
+     * ACTIVE pets belonging to the given shelter
+     *
+     * @return Pet[]
+     */
+    public function findActiveByShelter(User $shelter): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.status = :status')
+            ->andWhere('p.shelter = :shelter')
+            ->setParameter('status', PetStatus::ACTIVE)
+            ->setParameter('shelter', $shelter)
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Fostered pets
-     * A pet is considered fostered if its latest adoption history status is "Approved".
+     *
+     * A pet is considered fostered if its LATEST adoption history
+     * entry has status "Approved".
      *
      * @return Pet[]
      */
@@ -84,7 +121,9 @@ class PetRepository extends ServiceEntityRepository
 
     /**
      * Adopted pets
-     * A pet is considered adopted if its latest adoption history status is "Completed".
+     *
+     * A pet is considered adopted if its LATEST adoption history
+     * entry has status "Completed".
      *
      * @return Pet[]
      */
@@ -117,7 +156,7 @@ class PetRepository extends ServiceEntityRepository
     }
 
     /**
-     * Current pet of the week
+     * Current Pet of the Week
      *
      * @return Pet|null
      */
@@ -139,11 +178,11 @@ class PetRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find all available pets for matchmaker scoring
+     * Matchmaker candidates
      *
      * A pet is considered available if:
      * - it is ACTIVE
-     * - it has no adoption request yet
+     * - it has NO adoption requests yet
      *
      * @return Pet[]
      */

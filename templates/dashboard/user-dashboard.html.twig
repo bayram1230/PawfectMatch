@@ -1,0 +1,146 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User Dashboard{% endblock %}
+
+{% block body %}
+<div class="container index-container">
+
+    <!-- ACTION BAR -->
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        <button
+            class="btn operations-btn"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#userOffcanvas"
+        >
+            ☰ Menu
+        </button>
+    </div>
+
+    <h1 class="paw-card-h1">User Dashboard</h1>
+
+    <!-- WELCOME -->
+    <div class="text-center mb-5">
+        <h2 class="dashboard-title">
+            Welcome back, {{ username }}
+        </h2>
+        <p class="dashboard-subtitle">
+            Here is a quick overview of your account.
+        </p>
+    </div>
+
+    <!-- KPI / OVERVIEW CARDS -->
+    <div class="row g-4 justify-content-center">
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card text-center p-4 shadow paw-card">
+                <h5 class="mb-3">My Applications</h5>
+
+                <h2 class="fw-bold">
+                    {{ applications_count }}
+                </h2>
+
+                <a
+                    href="{{ path('user_applications') }}"
+                    class="btn btn-dark btn-sm mt-3"
+                >
+                    View Applications
+                </a>
+            </div>
+        </div>
+
+        {# Future extension examples (kept intentionally inactive) #}
+        {#
+        <div class="col-md-6 col-lg-4">
+            <div class="card text-center p-4 shadow paw-card">
+                <h5 class="mb-3">Profile</h5>
+                <a href="{{ path('user_profile') }}" class="btn btn-outline-dark btn-sm">
+                    Edit Profile
+                </a>
+            </div>
+        </div>
+        #}
+
+    </div>
+
+</div>
+
+<!-- OFFCANVAS MENU -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="userOffcanvas">
+    <div class="offcanvas-header">
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body text-center">
+        <img
+            src="{{ asset('img/navbar-logo.png') }}"
+            alt="logo"
+            style="width: 300px;"
+            class="mb-4"
+        >
+
+        <ul class="list-unstyled admin-ul">
+
+            <li class="dropdown">
+                <a
+                    href="#"
+                    class="custom-nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                >
+                    Dashboard
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    <li>
+                        <a href="{{ path('user_dashboard') }}" class="dropdown-item">
+                            Overview
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <hr>
+
+            <li class="dropdown">
+                <a
+                    href="#"
+                    class="custom-nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                >
+                    Applications
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    <li>
+                        <a href="{{ path('user_applications') }}" class="dropdown-item">
+                            My Applications
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <hr>
+
+            <li class="dropdown">
+                <a
+                    href="#"
+                    class="custom-nav-link dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                >
+                    Account
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    <li>
+                        <a href="#" class="dropdown-item disabled">
+                            Profile (coming soon)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="dropdown-item disabled">
+                            Settings (coming soon)
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        </ul>
+    </div>
+</div>
+{% endblock %}

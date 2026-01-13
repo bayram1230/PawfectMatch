@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Pets;
 
 use App\Service\PetCatalog;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
