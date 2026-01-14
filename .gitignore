@@ -20,3 +20,7 @@
 ###> docker runtime data ###
 /docker/
 ###< docker runtime data ###
+
+###> public media ###
+/public/video/
+###< public media ###
