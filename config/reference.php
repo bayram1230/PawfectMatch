@@ -1275,6 +1275,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         doctrine_migrations?: DoctrineMigrationsConfig,
  *         security?: SecurityConfig,
  *         twig?: TwigConfig,
+ *         maker?: MakerConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
