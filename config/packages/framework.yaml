@@ -2,15 +2,10 @@
 framework:
     secret: "%env(APP_SECRET)%"
 
-    # Enable PropertyInfo (Symfony 6.4 compatible)
     property_info:
         enabled: true
 
-    # Note that the session will be started ONLY if you read or write from it.
     session: true
-
-    #esi: true
-    #fragments: true
 
 when@test:
     framework:
