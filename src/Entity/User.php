@@ -23,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
     private ?string $username = null;
 
     /**
@@ -36,6 +37,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /* ==========================
+       ID
+       ========================== */
 
     public function getId(): ?int
     {
@@ -129,12 +134,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * @see UserInterface
+     *
+     * Clear any temporary, sensitive data.
+     * (Not needed here, but required by the interface)
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store temporary sensitive data (e.g. plainPassword), clear it here
+    }
+
+    /* ==========================
+       Serialization safety
+       ========================== */
+
+    /**
      * Ensure the session doesn't contain actual password hashes.
      */
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+        $data["\0" . self::class . "\0password"] = hash('crc32c', (string) $this->password);
 
         return $data;
     }

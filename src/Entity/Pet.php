@@ -49,14 +49,12 @@ class Pet
     private ?string $adoptionRequirements = null;
 
     /**
-     * Shelter owning this pet
-     *
-     * Nullable for now because existing imported pets
-     * may not yet be assigned to a shelter.
+     * Shelter owning this pet.
+     * A pet must always belong to exactly one shelter.
      */
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?User $shelter = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private User $shelter;
 
     #[ORM\Column(enumType: PetStatus::class)]
     private PetStatus $status;
@@ -117,7 +115,7 @@ class Pet
         return $this->image ?: 'default-animals.png';
     }
 
-    public function setImage(string $image): self
+    public function setImage(?string $image): self
     {
         $this->image = $image;
         return $this;
@@ -139,7 +137,7 @@ class Pet
         return $this->breed;
     }
 
-    public function setBreed(?string $breed): static
+    public function setBreed(?string $breed): self
     {
         $this->breed = $breed;
         return $this;
@@ -150,7 +148,7 @@ class Pet
         return $this->sex;
     }
 
-    public function setSex(?string $sex): static
+    public function setSex(?string $sex): self
     {
         $this->sex = $sex;
         return $this;
@@ -161,7 +159,7 @@ class Pet
         return $this->color;
     }
 
-    public function setColor(?string $color): static
+    public function setColor(?string $color): self
     {
         $this->color = $color;
         return $this;
@@ -172,7 +170,7 @@ class Pet
         return $this->size;
     }
 
-    public function setSize(?string $size): static
+    public function setSize(?string $size): self
     {
         $this->size = $size;
         return $this;
@@ -183,18 +181,18 @@ class Pet
         return $this->adoptionRequirements;
     }
 
-    public function setAdoptionRequirements(?string $adoptionRequirements): static
+    public function setAdoptionRequirements(?string $adoptionRequirements): self
     {
         $this->adoptionRequirements = $adoptionRequirements;
         return $this;
     }
 
-    public function getShelter(): ?User
+    public function getShelter(): User
     {
         return $this->shelter;
     }
 
-    public function setShelter(?User $shelter): static
+    public function setShelter(User $shelter): self
     {
         $this->shelter = $shelter;
         return $this;

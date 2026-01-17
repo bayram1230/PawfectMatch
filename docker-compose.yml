@@ -6,11 +6,27 @@ services:
         container_name: pawfectmatch_mysql
         restart: unless-stopped
         environment:
-            MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: pawfectmatch
             MYSQL_USER: app
             MYSQL_PASSWORD: secret
+            MYSQL_ROOT_PASSWORD: root
         ports:
             - "3306:3306"
         volumes:
-            - ./docker/mysql/data:/var/lib/mysql
+            - mysql_data:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: pawfectmatch_phpmyadmin
+        restart: unless-stopped
+        depends_on:
+            - mysql
+        environment:
+            PMA_HOST: mysql
+            PMA_USER: app
+            PMA_PASSWORD: secret
+        ports:
+            - "8080:80"
+
+volumes:
+    mysql_data:
