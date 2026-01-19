@@ -1,5 +1,4 @@
 <?php
-dd($_ENV['DATABASE_URL'] ?? 'NO ENV');
 
 use App\Kernel;
 

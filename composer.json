@@ -24,6 +24,7 @@
     "require-dev": {
         "symfony/maker-bundle": "^1.65.1",
         "symfony/phpunit-bridge": "^6.4.26",
+        "symfony/var-dumper": "6.4.*",
         "symfony/web-profiler-bundle": "6.4.*"
     },
     "config": {
