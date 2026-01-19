@@ -5,7 +5,13 @@
 {% block body %}
     {# HERO #}
     <header class="hero-section">
-        <video id="heroVideo" muted playsinline preload="auto">
+        <video id="heroVideo"
+               autoplay
+               muted
+               loop
+               playsinline
+               preload="auto"
+        >
             <source src="{{ asset('video/header.mp4') }}" type="video/mp4">
         </video>
 
