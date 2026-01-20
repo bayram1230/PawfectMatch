@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 .body-pic {
-    background: url("/images/body2.png");
+    background: url("/img/body2.png");
     background-repeat: repeat;
     background-position: center;
     background-color: rgb(15, 0, 90);
@@ -21,7 +21,7 @@
 }
 .custom-navbar {
     background-image:
-        url("/images/body2.png"),
+        url("/img/body2.png"),
         linear-gradient(
             180deg,
             #a8ff78 0%,
@@ -867,7 +867,7 @@
 /* Footer Start */
 footer {
     background-image:
-        url("/images/body2.png"),
+        url("/img/body2.png"),
         linear-gradient(
             180deg,
             #ffffff 0%,
