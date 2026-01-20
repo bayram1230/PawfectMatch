@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 .body-pic {
-    background: url("../img/body2.png");
+    background: url("/images/body2.png");
     background-repeat: repeat;
     background-position: center;
     background-color: rgb(15, 0, 90);
@@ -20,7 +20,8 @@
     width: 100px;
 }
 .custom-navbar {
-    background-image: url("../img/body2.png"),
+    background-image:
+        url("/images/body2.png"),
         linear-gradient(
             180deg,
             #a8ff78 0%,
@@ -30,7 +31,9 @@
             #f2fffa 100%
         );
     background-repeat: repeat, no-repeat;
-    background-size: 48px auto, 100% 100%;
+    background-size:
+        48px auto,
+        100% 100%;
     background-position: center, center;
     background-blend-mode: overlay;
     max-height: 80px;
@@ -63,7 +66,9 @@
     text-shadow: none;
     background-color: transparent;
     font-weight: 500;
-    transition: background 0.25s ease, color 0.25s ease;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
     font-size: 20px;
 }
 .custom-navbar .dropdown-menu .dropdown-item:hover,
@@ -200,7 +205,9 @@
     margin-bottom: 14px;
     opacity: 0;
     transform: scale(0.9);
-    transition: opacity 2.5s ease, transform 2.5s ease;
+    transition:
+        opacity 2.5s ease,
+        transform 2.5s ease;
     transition-delay: 3s;
 }
 .hero-outro-subtitle {
@@ -210,7 +217,9 @@
     letter-spacing: 0.4px;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 2.8s ease, transform 2.8s ease;
+    transition:
+        opacity 2.8s ease,
+        transform 2.8s ease;
     transition-delay: 6s;
 }
 .hero-outro.active .hero-outro-logo {
@@ -226,7 +235,8 @@
 .paw-card {
     background: linear-gradient(135deg, #a8ff78, #78ffd6);
     border-radius: 20px;
-    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18),
+    box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.18),
         inset 0 1px 0 rgba(255, 255, 255, 0.5);
     border: none;
     margin: 5px auto;
@@ -288,7 +298,8 @@
 .paw-card--index .paw-card-title {
     font-weight: 700;
     margin-bottom: 8px;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6),
+    text-shadow:
+        0 1px 1px rgba(255, 255, 255, 0.6),
         0 2px 3px rgba(0, 0, 0, 0.15);
 }
 .paw-card-meta {
@@ -311,7 +322,8 @@
     font-size: 18px;
     border-radius: 12px;
     font-weight: 600;
-    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.6),
+    text-shadow:
+        0 1px 1px rgba(255, 255, 255, 0.6),
         0 2px 3px rgba(0, 0, 0, 0.15);
 }
 .index-card-hr {
@@ -357,7 +369,9 @@
     border-radius: 15px;
     text-decoration: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
     margin: 20px 0 85px 0;
 }
 .details-back-button:hover {
@@ -469,7 +483,9 @@
     text-decoration: none;
     color: #000;
     text-align: center;
-    transition: transform 0.2s ease, background 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
 }
 .details-inline-btn:hover {
     transform: scale(1.05);
@@ -850,7 +866,8 @@
 /* User Dashboard End */
 /* Footer Start */
 footer {
-    background-image: url("../img/body2.png"),
+    background-image:
+        url("/images/body2.png"),
         linear-gradient(
             180deg,
             #ffffff 0%,
@@ -863,7 +880,9 @@ footer {
             #ffffff 100%
         );
     background-repeat: repeat, no-repeat;
-    background-size: 48px auto, 100% 100%;
+    background-size:
+        48px auto,
+        100% 100%;
     background-position: center, center;
     background-blend-mode: overlay;
     box-shadow: inset 0 -1px 0 rgba(168, 255, 120, 0.6);

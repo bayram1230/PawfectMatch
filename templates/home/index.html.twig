@@ -35,48 +35,54 @@
 
         <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {% if pets is not empty %}
-                {% for pet in pets %}
-                    {% set imgSrc = pet.image starts with 'http'
-                        ? pet.image
-                        : asset('img/' ~ pet.image)
-                    %}
+    {% for pet in pets %}
 
-                    <div class="col">
-                        <div class="card paw-card paw-card--index">
-                            <div class="paw-card-inner">
-                                <div class="paw-card-content">
-                                    <img
-                                        src="{{ imgSrc }}"
-                                        class="paw-card-img"
-                                        alt="{{ pet.name }}"
-                                        onerror="this.src='{{ asset('img/default-animals.png') }}'"
-                                    >
-
-                                    <div class="paw-card-title-wrapper">
-                                        <h5 class="paw-card-title">{{ pet.name }}</h5>
-                                        <hr class="index-card-hr">
-                                        <p class="paw-card-meta">
-                                            Breed: {{ pet.breed ?? 'Unknown' }}
-                                        </p>
-                                    </div>
-
-                                    <a
-                                        href="{{ path('pets_detail', { id: pet.id }) }}
-"
-                                        class="btn paw-card-btn"
-                                    >
-                                        🐾 More Details 🐾
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
+        {% if pet.image is defined and pet.image is not empty %}
+            {% if pet.image starts with 'http' %}
+                {% set imgSrc = pet.image %}
             {% else %}
-                <div class="col-12">
-                    <h3 class="my-3">No animals found</h3>
-                </div>
+                {% set imgSrc = asset('img/pets/' ~ pet.image) %}
             {% endif %}
+        {% else %}
+            {% set imgSrc = asset('img/pets/default-animals.png') %}
+        {% endif %}
+
+        <div class="col">
+            <div class="card paw-card paw-card--index">
+                <div class="paw-card-inner">
+                    <div class="paw-card-content">
+                        <img
+                            src="{{ imgSrc }}"
+                            class="paw-card-img"
+                            alt="{{ pet.name }}"
+                        >
+
+                        <div class="paw-card-title-wrapper">
+                            <h5 class="paw-card-title">{{ pet.name }}</h5>
+                            <hr class="index-card-hr">
+                            <p class="paw-card-meta">
+                                Breed: {{ pet.breed ?? 'Unknown' }}
+                            </p>
+                        </div>
+
+                        <a
+                            href="{{ path('pets_detail', { id: pet.id }) }}"
+                            class="btn paw-card-btn"
+                        >
+                            🐾 More Details 🐾
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    {% endfor %}
+{% else %}
+    <div class="col-12">
+        <h3 class="my-3">No animals found</h3>
+    </div>
+{% endif %}
+
         </div>
     </div>
 
