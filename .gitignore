@@ -2,6 +2,7 @@
 /.env.local
 /.env.local.php
 /.env.*.local
+/.env.prod
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
@@ -21,6 +22,17 @@
 /docker/
 ###< docker runtime data ###
 
-###> public media ###
+###> public runtime media ###
 /public/video/
-###< public media ###
+/public/img/
+/public/uploads/
+###< public runtime media ###
+
+###> local environment & cache ###
+/.phpunit.result.cache
+###< local environment & cache ###
+
+###> local documentation & helpers ###
+/SYSTEM_SAFE_SHUTDOWN
+/PawfectMatch – Project Status & Arc.txt
+###< local documentation & helpers ###
