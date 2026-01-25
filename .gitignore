@@ -34,5 +34,7 @@
 
 ###> local documentation & helpers ###
 /SYSTEM_SAFE_SHUTDOWN
-/PawfectMatch – Project Status & Arc.txt
+PawfectMatch_Documentation.txt
+/build_pawfectmatch
+build_upload.ps1
 ###< local documentation & helpers ###
